@@ -3,12 +3,15 @@ import Player from "./player";
 import ComputerPlayer from "./computerPlayer";
 
 function createBoard(player, isCpu = true) {
-  player.myBoard.addShip(6);
-  player.myBoard.addShip(5);
-  player.myBoard.addShip(4);
-  player.myBoard.addShip(3);
-  player.myBoard.addShip(2);
+  const allShips = [6, 5, 4, 4, 3, 3, 2, 2];
+  for (let i = 0; i < allShips.length; i += 1)
+    player.myBoard.addShip(allShips[i]);
   const board = document.createElement("div");
+  const playerName = document.createElement('h2');
+  playerName.classList.add('player-name')
+  playerName.textContent = `${player.isCPU ? 'Computer' : 'Human'}`
+  board.appendChild(playerName)
+  board.classList.add(`${isCpu ? "cpu" : "real-player"}`);
   for (let i = 0; i < 10; i += 1) {
     const row = document.createElement("div");
     row.classList.add("row");
@@ -36,40 +39,21 @@ const playerBoard = createBoard(realPlayer, false);
 container.appendChild(playerBoard);
 container.appendChild(computerBoard);
 
-const allcell = document.querySelectorAll(".cell");
-allcell.forEach((element) => {
-  element.addEventListener("click", () => {
-    const uniqueid = element.id;
-    const row = parseInt(uniqueid.slice(0, 1), 10);
-    const col = parseInt(uniqueid.slice(2, 3), 10);
-    const playerName = uniqueid.slice(4);
-    if (playerName === "real") {
-      return;
-    }
-    attack(row, col, cpuPlayer);
-    const cpuCords = cpuPlayer.play(realPlayer);
-    const loader = document.createElement('div')
-    loader.classList.add('loader');
-    playerBoard.appendChild(loader)
-    setTimeout(() => {
-        attack(cpuCords[0], cpuCords[1], realPlayer);
-        loader.remove()
-    }, 1000)
-    // console.log(cpuPlayer.myBoard.areShipsDestroyed())
-  });
-});
-
 function attack(x, y, player) {
-  const currCell = player.myBoard.board[x][y];
+  let currCell = player.myBoard.board[x][y];
+  if (currCell === "!" || currCell === 1) return 0;
   if (currCell !== 0 && currCell !== "!" && currCell !== 1) {
     const anotherCell = document.getElementById(
       `${x}-${y}-${player.isCPU ? "cpu" : "real"}`,
     );
     if (player.myBoard.board[x][y]) {
       anotherCell.classList.add(`ship${player.myBoard.board[x][y].length}`);
+      if (!player.isCPU)
+        anotherCell.style.opacity = 0.2;
     }
   }
   player.myBoard.receiveAttack(x, y);
+  currCell = player.myBoard.board[x][y];
   for (let i = 0; i < 10; i += 1) {
     for (let j = 0; j < 10; j += 1) {
       const currId = `${i}-${j}-${player.isCPU ? "cpu" : "real"}`;
@@ -79,4 +63,59 @@ function attack(x, y, player) {
       }
     }
   }
+  if (player.myBoard.areShipsDestroyed()) 
+    gameWon(player.isCPU ? realPlayer : cpuPlayer)
+  if (currCell === 1) return 1;
+  return 2;
 }
+
+function cpuTurn() {
+  const cpuCords = cpuPlayer.play(realPlayer);
+  const loader = document.createElement("div");
+  loader.classList.add("loader");
+  playerBoard.appendChild(loader);
+  setTimeout(() => {
+    loader.remove();
+    const attackValue = attack(cpuCords[0], cpuCords[1], realPlayer)
+    if (attackValue === 2) start()
+    else if (attackValue === 1) cpuTurn()
+    
+  }, 1000);
+}
+
+function playerTurn() {
+  const uniqueid = this.id;
+  const row = parseInt(uniqueid.slice(0, 1), 10);
+  const col = parseInt(uniqueid.slice(2, 3), 10);
+  const playerName = uniqueid.slice(4);
+  if (playerName === "real") {
+    return;
+  }
+  if (attack(row, col, cpuPlayer) === 2){
+    unStart()
+    cpuTurn();
+  }
+
+}
+
+function start() {
+  const allcell = document.querySelectorAll(".cell");
+  allcell.forEach((element) => {
+    element.addEventListener("click", playerTurn);
+  });
+}
+
+function unStart() {
+  const allcell = document.querySelectorAll(".cell");
+  allcell.forEach((element) => {
+    element.removeEventListener("click", playerTurn);
+  });
+}
+
+function gameWon(player) {
+    const info = document.querySelector('.info');
+    info.textContent = `${player.isCPU ? 'Computer' : 'Human'} has won the game`
+    unStart()
+}
+
+start();

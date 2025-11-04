@@ -19,9 +19,7 @@ export default class ComputerPlayer extends Player {
       x = Gameboard.getRandomInteger(0, 9);
       y = Gameboard.getRandomInteger(0, 9);
     }
-    opponent.myBoard.receiveAttack(x, y);
     this.visited.add([x, y].toString());
-    console.log([x, y].toString())
     return [x, y];
   }
 }
