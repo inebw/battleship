@@ -1,5 +1,5 @@
 {
-  "name": "template-repo",
+  "name": "battleship",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/inebw/template-repo.git"
+    "url": "git+https://github.com/inebw/battleship.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/inebw/template-repo/issues"
+    "url": "https://github.com/inebw/battleship/issues"
   },
-  "homepage": "https://github.com/inebw/template-repo#readme",
+  "homepage": "https://github.com/inebw/battleship#readme",
   "devDependencies": {
     "@babel/core": "^7.28.5",
     "@babel/preset-env": "^7.28.5",
