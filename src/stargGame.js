@@ -79,8 +79,10 @@ export default function startGame() {
         }
       }
     }
-    if (player.myBoard.areShipsDestroyed())
-      gameWon(player.isCPU ? realPlayer : cpuPlayer);
+    if (player.myBoard.areShipsDestroyed()) {
+        gameWon(player.isCPU ? realPlayer : cpuPlayer);
+        return 0
+    }
     if (currCell === 1) return 1;
     return 2;
   }
