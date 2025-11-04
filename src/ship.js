@@ -2,6 +2,8 @@ export default class Ship {
     constructor(length = 1) {
         this.length = length;
         this.hits = 0;
+        this.cords = [];
+        this.isHorizontal = true;
     }
 
     hit() {

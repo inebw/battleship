@@ -41,8 +41,14 @@ export default class Gameboard {
     const ship = new Ship(length);
     this.myShips.push(ship);
     for (let i = 0; i < length; i += 1) {
-      if (isHorizontal) this.board[x + i][y] = ship;
-      else this.board[x][y + i] = ship;
+      if (isHorizontal) {
+        this.board[x + i][y] = ship;
+        ship.cords.push([x + i, y]);
+      } else {
+        this.board[x][y + i] = ship;
+        ship.cords.push([x, y + i]);
+        ship.isHorizontal = false;
+      }
     }
   }
 
@@ -110,10 +116,11 @@ export default class Gameboard {
   // Attack the board on the given coordinates
   receiveAttack(x, y) {
     // Missed Shot or cell already used
-    if (this.board[x][y] === 0 || this.board[x][y] === "!") {
+    if (this.board[x][y] === 0) {
       this.board[x][y] = "!";
       return;
     }
+    if (this.board[x][y] === "!" || this.board[x][y] === 1) return
 
     this.hitShip(x, y);
   }
@@ -122,33 +129,47 @@ export default class Gameboard {
   hitShip(x, y) {
     const ship = this.board[x][y];
     ship.hit();
-    this.board[x][y] = '!';
+    this.board[x][y] = 1;
+    this.markDiagonally(x, y);
     if (ship.isSunk()) {
-        this.markAllAdjacent(x, y);
-        this.destroyedShips += 1;
+      this.markAllAdjacent(ship);
+      this.destroyedShips += 1;
     }
-    else this.markDiagonally(x, y);
   }
 
   // Mark all adjacent cells if the ship is sunk
-  markAllAdjacent(x, y) {
-    const allNeighbors = [
-      [-1, -1],
-      [-1, 0],
-      [-1, 1],
-      [0, -1],
-      [0, 1],
-      [1, -1],
-      [1, 0],
-      [1, 1],
-    ];
+  markAllAdjacent(ship) {
+    const { cords, isHorizontal } = ship;
+    const neigbors = {
+      left: [-1, 0],
+      top: [0, -1],
+      bottom: [0, 1],
+      right: [1, 0],
+    };
+    const startCell = cords[0];
+    const endCell = cords[cords.length - 1];
 
-    for (let i = 0; i < allNeighbors.length; i += 1) {
-      const row = x + allNeighbors[i][0];
-      const col = y + allNeighbors[i][1];
-      if (!Gameboard.isOutOfBounds(row, col)) {
-        this.board[row][col] = "!";
-      }
+    if (isHorizontal) {
+      const startCellRow = startCell[0] + neigbors.left[0];
+      const startCellCol = startCell[1] + neigbors.left[1];
+      if (!Gameboard.isOutOfBounds(startCellRow, startCellCol))
+        this.board[startCellRow][startCellCol] = "!";
+
+      const endCellRow = endCell[0] + neigbors.right[0];
+      const endCellCol = endCell[1] + neigbors.right[1];
+      if (!Gameboard.isOutOfBounds(endCellRow, endCellCol))
+        this.board[endCellRow][endCellCol] = "!";
+    }
+    if (!isHorizontal || cords.length === 1) {
+      const startCellRow = startCell[0] + neigbors.top[0];
+      const startCellCol = startCell[1] + neigbors.top[1];
+      if (!Gameboard.isOutOfBounds(startCellRow, startCellCol))
+        this.board[startCellRow][startCellCol] = "!";
+
+      const endCellRow = endCell[0] + neigbors.bottom[0];
+      const endCellCol = endCell[1] + neigbors.bottom[1];
+      if (!Gameboard.isOutOfBounds(endCellRow, endCellCol))
+        this.board[endCellRow][endCellCol] = "!";
     }
   }
 

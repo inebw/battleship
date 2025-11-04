@@ -1,3 +1,65 @@
-body {
-  background-color: violet;
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: none;
 }
+
+.container {
+  padding: 25px;
+  display: flex;
+  gap: 50px;
+  position: relative;
+}
+
+.cell {
+  min-width: 35px;
+  min-height: 35px;
+  border: solid black 1px;
+  border-radius: 2px;
+  margin: 2px;
+}
+
+.row {
+  display: flex;
+}
+
+.ship6 {
+  background-color: orange;
+}
+
+.ship5 {
+  background-color: red;
+}
+
+.ship4 {
+  background-color: blue;
+}
+
+.ship3 {
+  background-color: green;
+}
+
+.ship2 {
+  background-color: yellow;
+}
+
+/* HTML: <div class="loader"></div> */
+/* HTML: <div class="loader"></div> */
+.loader {
+  position: absolute;
+  top: 45%;
+  left: 200px;
+  width: 50px;
+  --b: 8px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #514b82;
+  -webkit-mask:
+    repeating-conic-gradient(#0000 0deg,#000 1deg 70deg,#0000 71deg 90deg),
+    radial-gradient(farthest-side,#0000 calc(100% - var(--b) - 1px),#000 calc(100% - var(--b)));
+  -webkit-mask-composite: destination-in;
+          mask-composite: intersect;
+  animation: l5 1s infinite;
+}
+@keyframes l5 {to{transform: rotate(.5turn)}}
