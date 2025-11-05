@@ -87,9 +87,10 @@ export default function startGame() {
     return 2;
   }
 
-  function cpuTurn() {
+  function cpuTurn(isHit = false) {
     info.textContent = 'Computer is playing'
-    const cpuCords = cpuPlayer.play(realPlayer);
+    const cpuCords = cpuPlayer.play(realPlayer, isHit);
+    console.log(cpuCords)
     const loader = document.createElement("div");
     loader.classList.add("loader");
     playerBoard.appendChild(loader);
@@ -97,7 +98,7 @@ export default function startGame() {
       loader.remove();
       const attackValue = attack(cpuCords[0], cpuCords[1], realPlayer);
       if (attackValue === 2) start();
-      else if (attackValue === 1) cpuTurn();
+      else if (attackValue === 1) cpuTurn(true);
     }, 1000);
   }
 
