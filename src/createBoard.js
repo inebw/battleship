@@ -7,10 +7,17 @@ export default function createBoard(player, isCpu = true) {
   const playerName = document.createElement("h2");
 
   playerName.classList.add("player-name");
-  playerName.textContent = `${player.isCPU ? "Computer" : "Human"}`;
+  if (player.name === "Player 1" || player.name === "Player 2")
+    playerName.textContent = `Attack ${player.name} board`
+  else
+    playerName.textContent = isCpu ? `Attack Computer board` : 'Your Board';
 
   board.appendChild(playerName);
-  board.classList.add(`${isCpu ? "cpu" : "real-player"}`);
+
+  if (player.name === "Player 1" || player.name === "Player 2")
+    board.classList.add(`board-p${player.name.slice(player.name.length - 1)}`);
+  else
+    board.classList.add(`${isCpu ? "cpu" : "real-player"}`);
 
   for (let i = 0; i < 10; i += 1) {
     const row = document.createElement("div");
@@ -23,7 +30,14 @@ export default function createBoard(player, isCpu = true) {
       }
 
       cell.classList.add("cell");
-      cell.id = `${i}-${j}-${isCpu ? "cpu" : "real"}`;
+      if (player.name === "Player 1" || player.name === "Player 2") {
+        const pName = `p${player.name.slice(player.name.length - 1)}`
+        cell.id = `${i}-${j}-${pName}`;
+        cell.classList.add(pName)
+      } else {
+        cell.id = `${i}-${j}-${isCpu ? "cpu" : "real"}`;
+      }
+
       row.appendChild(cell);
     }
     board.appendChild(row);

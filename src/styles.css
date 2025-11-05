@@ -16,7 +16,6 @@
   font-family: "Tiny5";
 }
 
-
 body {
   display: flex;
   flex-direction: column;
@@ -34,14 +33,15 @@ body {
 }
 
 .home-container {
+  position: relative;
   display: flex;
   gap: 20px;
 }
 
 h1 {
   font-size: 3rem;
+  padding: 5px 10px 5px 10px;
 }
-
 
 button,
 .info,
@@ -49,7 +49,7 @@ h2 {
   font-size: 2rem;
 }
 
-.info{
+.info {
   padding: 10px;
 }
 
@@ -61,6 +61,7 @@ button {
   box-shadow: 0px 0px 4px grey;
 }
 
+body > h1:hover,
 button:hover {
   cursor: pointer;
   background-color: #c5c3c6;
@@ -99,7 +100,7 @@ button:focus {
   background-color: #b1a7a6;
 }
 
-.main-graph-container{
+.main-graph-container {
   display: flex;
   gap: 20px;
 }
@@ -124,6 +125,7 @@ button:focus {
 }
 
 .graph-title {
+  max-width: 120px;
   color: #b1a7a6;
   align-self: center;
   justify-self: center;
@@ -162,6 +164,10 @@ button:focus {
   background-color: #457b9d;
 }
 
+.hidden {
+  display: none;
+}
+
 /* HTML: <div class="loader"></div> */
 .loader {
   top: 50%;
@@ -197,11 +203,52 @@ button:focus {
 .loader2 {
   width: 120px;
   height: 20px;
-  background:
-   linear-gradient(#000 0 0) left/20px 20px no-repeat
-   #ddd;
+  background: linear-gradient(#000 0 0) left/20px 20px no-repeat #ddd;
   animation: l1 1s infinite linear;
 }
 @keyframes l1 {
-    50% {background-position: right }
+  50% {
+    background-position: right;
+  }
+}
+
+/* HTML: <div class="loader"></div> */
+.loader3 {
+  margin-top: 80%;
+  width: fit-content;
+  font-weight: bold;
+  font-size: 35px;
+  overflow: hidden;
+}
+.loader3::before {
+  content: "Switching Player";
+  color: #0000;
+  text-shadow: 0 0 0 #2b2d42,19ch 0 0 #b1a7a6,38ch 0 0 #2b2d42;
+  background: linear-gradient(90deg,#0000 calc(100%/3),#2b2d42 0 calc(2*100%/3),#0000 0) left/300% 100%;
+  animation: l23 2s infinite;
+}
+
+@keyframes l23{
+  50% {background-position: center;text-shadow: -19ch 0 0 #2b2d42,    0 0 0 #b1a7a6,19ch 0 0 #2b2d42}
+  100%{background-position: right ;text-shadow: -38ch 0 0 #2b2d42,-19ch 0 0 #b1a7a6,   0 0 0 #2b2d42}
+}
+
+.loader4 {
+  margin-top: 80%;
+  width: fit-content;
+  font-weight: bold;
+  font-size: 35px;
+  overflow: hidden;
+}
+.loader4::before {
+  content: "Restarting Game";
+  color: #0000;
+  text-shadow: 0 0 0 #2b2d42,16ch 0 0 #b1a7a6,32ch 0 0 #2b2d42;
+  background: linear-gradient(90deg,#0000 calc(100%/3),#2b2d42 0 calc(2*100%/3),#0000 0) left/300% 100%;
+  animation: l23 2s infinite;
+}
+
+@keyframes l23{
+  50% {background-position: center;text-shadow: -16ch 0 0 #2b2d42,    0 0 0 #b1a7a6,16ch 0 0 #2b2d42}
+  100%{background-position: right ;text-shadow: -32ch 0 0 #2b2d42,-16ch 0 0 #b1a7a6,   0 0 0 #2b2d42}
 }

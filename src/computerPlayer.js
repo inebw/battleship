@@ -4,6 +4,7 @@ import Player from "./player";
 export default class ComputerPlayer extends Player {
   constructor() {
     super();
+    this.name = 'Computer'
     this.isCPU = true;
     this.allMoves = new Set();
     this.visited = [];

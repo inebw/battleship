@@ -68,7 +68,6 @@ export default function startGame() {
   function cpuTurn(isHit = false) {
     info.textContent = "Computer is attacking your ships";
     const cpuCords = cpuPlayer.play(realPlayer, isHit);
-    console.log(cpuCords);
     const loader = document.createElement("div");
     loader.classList.add("loader");
     playerBoard.appendChild(loader);
@@ -110,10 +109,8 @@ export default function startGame() {
   }
 
   function gameWon(player) {
-    const info = document.querySelector(".info");
     info.textContent = `${player.isCPU ? "Computer" : "Human"} has won the game`;
     graphs.innerHTML = "";
-    const resetContainer = document.querySelector(".reset");
     const resetButton = document.createElement("button");
     resetContainer.appendChild(resetButton);
     resetButton.classList.add("reset");
