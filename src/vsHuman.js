@@ -127,7 +127,7 @@ export default function vsHuman() {
       info.innerHTML = "";
       graphs.innerHTML = "";
       resetContainer.innerHTML = "";
-      addLoader(container);
+      addLoader(container, false);
       setTimeout(() => {
         vsHuman();
       }, 1000);
