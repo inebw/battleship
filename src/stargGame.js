@@ -1,58 +1,29 @@
 import Player from "./player";
 import ComputerPlayer from "./computerPlayer";
+import createBoard from "./createBoard";
+import createGraph from "./createGraph";
 
 export default function startGame() {
   const container = document.querySelector(".container");
+  const graphs = document.querySelector(".graphs");
   const resetContainer = document.querySelector(".reset");
   const info = document.querySelector(".info");
   container.innerHTML = "";
   resetContainer.innerHTML = "";
   info.innerHTML = "";
-
-  function createBoard(player, isCpu = true) {
-    const allShips = [6, 5, 4, 4, 3, 3, 2, 2];
-    for (let i = 0; i < allShips.length; i += 1)
-      player.myBoard.addShip(allShips[i]);
-    const board = document.createElement("div");
-    const playerName = document.createElement("h2");
-    playerName.classList.add("player-name");
-    playerName.textContent = `${player.isCPU ? "Computer" : "Human"}`;
-    board.appendChild(playerName);
-    board.classList.add(`${isCpu ? "cpu" : "real-player"}`);
-    for (let i = 0; i < 10; i += 1) {
-      const row = document.createElement("div");
-      row.classList.add("row");
-      for (let j = 0; j < 10; j += 1) {
-        const cell = document.createElement("div");
-        if (player.myBoard.board[i][j] !== 0 && isCpu === false) {
-          cell.classList.add(`ship${player.myBoard.board[i][j].length}`);
-        }
-
-        cell.classList.add("cell");
-        cell.id = `${i}-${j}-${isCpu ? "cpu" : "real"}`;
-        row.appendChild(cell);
-      }
-      board.appendChild(row);
-    }
-    return board;
-  }
-
-  function createGraph(player, isCPU = true) {
-    const allShips = [6, 5, 4, 4, 3, 3, 2, 2];
-    const container = document.createElement("div");
-    container.classList.add("graph");
-
-    for (let i = 0; i < allShips.length; i += 1) {
-      const row = document.createElement("div");
-      row.classList.add("graph-row");
-    }
-  }
+  graphs.innerHTML = "";
 
   const realPlayer = new Player();
   const cpuPlayer = new ComputerPlayer();
 
   const computerBoard = createBoard(cpuPlayer);
+  const computerGraph = createGraph(cpuPlayer);
+
   const playerBoard = createBoard(realPlayer, false);
+  const playerGraph = createGraph(realPlayer);
+  graphs.appendChild(playerGraph);
+  graphs.appendChild(computerGraph);
+
   container.appendChild(playerBoard);
   container.appendChild(computerBoard);
 
@@ -79,18 +50,25 @@ export default function startGame() {
         }
       }
     }
-    if (player.myBoard.areShipsDestroyed()) {
+
+    if (currCell === 1) {
+      const graphCell = document.getElementById(
+        `${x}-${y}-graph-${player.isCPU ? "cpu" : "real"}`,
+      );
+      graphCell.style.opacity = 0.2;
+      if (player.myBoard.areShipsDestroyed()) {
         gameWon(player.isCPU ? realPlayer : cpuPlayer);
-        return 0
+        return 0;
+      }
+      return 1;
     }
-    if (currCell === 1) return 1;
     return 2;
   }
 
   function cpuTurn(isHit = false) {
-    info.textContent = 'Computer is playing'
+    info.textContent = "Computer is attacking your ships";
     const cpuCords = cpuPlayer.play(realPlayer, isHit);
-    console.log(cpuCords)
+    console.log(cpuCords);
     const loader = document.createElement("div");
     loader.classList.add("loader");
     playerBoard.appendChild(loader);
@@ -117,7 +95,7 @@ export default function startGame() {
   }
 
   function start() {
-    info.textContent = "It's your turn"
+    info.textContent = "It's your turn to attack";
     const allcell = document.querySelectorAll(".cell");
     allcell.forEach((element) => {
       element.addEventListener("click", playerTurn);
@@ -134,7 +112,7 @@ export default function startGame() {
   function gameWon(player) {
     const info = document.querySelector(".info");
     info.textContent = `${player.isCPU ? "Computer" : "Human"} has won the game`;
-
+    graphs.innerHTML = "";
     const resetContainer = document.querySelector(".reset");
     const resetButton = document.createElement("button");
     resetContainer.appendChild(resetButton);
