@@ -1,4 +1,4 @@
 import "./styles.css";
-import startGame from "./stargGame";
+import homescreen from "./homescreen";
 
-startGame();
+homescreen();
