@@ -28,12 +28,9 @@ export default function vsHuman() {
   container.appendChild(player1Board);
   container.appendChild(player2Board);
 
-  function addLoader(loaderContainer, isLoader3 = true) {
+  function addLoader(loaderContainer, loaderClass) {
     const loader = document.createElement("div");
-    if (isLoader3)
-      loader.classList.add("loader3");
-    else
-      loader.classList.add("loader4");
+    loader.classList.add(loaderClass);
     loaderContainer.appendChild(loader);
   }
 
@@ -76,7 +73,7 @@ export default function vsHuman() {
     const opponentGraph = document.querySelector(`.graph${opponentNumber}`);
     opponentContainer.classList.add("hidden");
     opponentGraph.classList.add("hidden");
-    addLoader(container);
+    addLoader(container, 'loader3');
     setTimeout(() => {
       removeLoader();
       info.textContent = `It's your turn: ${opponent.name}`;
@@ -127,7 +124,7 @@ export default function vsHuman() {
       info.innerHTML = "";
       graphs.innerHTML = "";
       resetContainer.innerHTML = "";
-      addLoader(container, false);
+      addLoader(container, 'loader4');
       setTimeout(() => {
         vsHuman();
       }, 1000);
