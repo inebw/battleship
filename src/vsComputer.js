@@ -3,8 +3,10 @@ import ComputerPlayer from "./computerPlayer";
 import createBoard from "./createBoard";
 import createGraph from "./createGraph";
 import attack from "./attack";
+import gameOver from "./gameEnd";
+import { addLoader, removeLoader } from "./cssLoaders";
 
-export default function startGame() {
+export default function vsComputer() {
   const container = document.querySelector(".container");
   const graphs = document.querySelector(".graphs");
   const resetContainer = document.querySelector(".reset");
@@ -31,16 +33,14 @@ export default function startGame() {
   function cpuTurn(isHit = false) {
     info.textContent = "Computer is attacking your ships";
     const cpuCords = cpuPlayer.play(realPlayer, isHit);
-    const loader = document.createElement("div");
-    loader.classList.add("loader");
-    playerBoard.appendChild(loader);
+    addLoader(playerBoard, "cpu-playing-loader");
     setTimeout(() => {
-      loader.remove();
+      removeLoader("cpu-playing-loader");
       const attackValue = attack(cpuCords[0], cpuCords[1], realPlayer);
       if (attackValue === 2) start();
       else if (attackValue === 1) {
         if (realPlayer.myBoard.areShipsDestroyed()) {
-          gameWon(cpuPlayer);
+          gameOver(cpuPlayer, vsComputer);
           return;
         }
         cpuTurn(true);
@@ -61,7 +61,10 @@ export default function startGame() {
       unStart();
       cpuTurn();
     } else if (attackVal === 1) {
-      if (cpuPlayer.myBoard.areShipsDestroyed()) gameWon(realPlayer);
+      if (cpuPlayer.myBoard.areShipsDestroyed()) {
+        unStart();
+        gameOver(realPlayer, vsComputer);
+      }
     }
   }
 
@@ -77,19 +80,6 @@ export default function startGame() {
     const allcell = document.querySelectorAll(".cell");
     allcell.forEach((element) => {
       element.removeEventListener("click", playerTurn);
-    });
-  }
-
-  function gameWon(player) {
-    info.textContent = `${player.isCPU ? "Computer" : "Human"} has won the game`;
-    graphs.innerHTML = "";
-    const resetButton = document.createElement("button");
-    resetContainer.appendChild(resetButton);
-    resetButton.classList.add("reset");
-    resetButton.textContent = "Replay";
-    unStart();
-    resetButton.addEventListener("click", () => {
-      startGame();
     });
   }
 

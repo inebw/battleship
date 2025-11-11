@@ -2,6 +2,8 @@ import Player from "./player";
 import createBoard from "./createBoard";
 import createGraph from "./createGraph";
 import attack from "./attack";
+import gameOver from "./gameEnd";
+import { addLoader, removeLoader } from "./cssLoaders";
 
 export default function vsHuman() {
   const container = document.querySelector(".container");
@@ -20,25 +22,14 @@ export default function vsHuman() {
   const player2Board = createBoard(player2);
 
   const graph1 = createGraph(player1);
-  graph1.classList.add("graph1");
+  graph1.classList.add("graphP1");
   const graph2 = createGraph(player2);
-  graph2.classList.add("graph2");
+  graph2.classList.add("graphP2");
   graphs.appendChild(graph1);
   graphs.appendChild(graph2);
 
   container.appendChild(player1Board);
   container.appendChild(player2Board);
-
-  function addLoader(loaderContainer, loaderClass) {
-    const loader = document.createElement("div");
-    loader.classList.add(loaderClass);
-    loaderContainer.appendChild(loader);
-  }
-
-  function removeLoader() {
-    const loader = document.querySelector(".loader3");
-    if (loader) loader.remove();
-  }
 
   function play() {
     const uniqueid = this.id;
@@ -46,12 +37,12 @@ export default function vsHuman() {
     const col = parseInt(uniqueid.slice(2, 3), 10);
     const opponent = uniqueid.slice(4) === "P1" ? player1 : player2;
     const player = uniqueid.slice(4) === "P1" ? player2 : player1;
-    console.log(row, col, opponent, player);
     const attackval = attack(row, col, opponent);
     if (attackval === 1) {
       if (opponent.myBoard.areShipsDestroyed()) {
-        gameWon(player);
-        return 0;
+        turnOffPlayerBoardEVentListner(player2);
+        turnOffPlayerBoardEVentListner(player1);
+        gameOver(player, vsHuman);
       }
     }
     if (attackval === 2) switchButtonAdder(opponent, player);
@@ -74,20 +65,16 @@ export default function vsHuman() {
   function switchPlayer(opponent, player) {
     info.textContent = "";
     resetContainer.innerHTML = "";
-    const opponentNumber = `${opponent.name.slice(opponent.name.length - 1)}`;
-    const opponentContainer = document.querySelector(
-      `.board-p${opponentNumber}`,
-    );
-    const opponentGraph = document.querySelector(`.graph${opponentNumber}`);
+    const opponentContainer = document.querySelector(`.board-${opponent.id}`);
+    const opponentGraph = document.querySelector(`.graph${opponent.id}`);
     opponentContainer.classList.add("hidden");
     opponentGraph.classList.add("hidden");
-    addLoader(container, "loader3");
+    addLoader(container, "switch-player-loader");
     setTimeout(() => {
-      removeLoader();
+      removeLoader("switch-player-loader");
       info.textContent = `It's your turn: ${opponent.name}`;
-      const playernumber = opponentNumber === "1" ? "2" : "1";
-      const playerContainer = document.querySelector(`.board-p${playernumber}`);
-      const playerGraph = document.querySelector(`.graph${playernumber}`);
+      const playerContainer = document.querySelector(`.board-${player.id}`);
+      const playerGraph = document.querySelector(`.graph${player.id}`);
       playerContainer.classList.remove("hidden");
       playerGraph.classList.remove("hidden");
       turn(opponent, player);
@@ -112,27 +99,6 @@ export default function vsHuman() {
     turnOffPlayerBoardEVentListner(player);
 
     turnOnPlayerBoardEventListner(opponent);
-  }
-
-  function gameWon(player) {
-    info.textContent = `${player.name} has won the game`;
-    graphs.innerHTML = "";
-    const resetButton = document.createElement("button");
-    resetContainer.appendChild(resetButton);
-    resetButton.classList.add("reset");
-    resetButton.textContent = "Replay";
-    turnOffPlayerBoardEVentListner(player2);
-    turnOffPlayerBoardEVentListner(player1);
-    resetButton.addEventListener("click", () => {
-      container.innerHTML = "";
-      info.innerHTML = "";
-      graphs.innerHTML = "";
-      resetContainer.innerHTML = "";
-      addLoader(container, "loader4");
-      setTimeout(() => {
-        vsHuman();
-      }, 1000);
-    });
   }
 
   function initialize() {

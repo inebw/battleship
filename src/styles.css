@@ -191,7 +191,7 @@ button:focus {
 }
 
 /* HTML: <div class="loader"></div> */
-.loader {
+.cpu-playing-loader {
   top: 50%;
   left: 220px;
   width: 20px;
@@ -202,8 +202,8 @@ button:focus {
   animation: l2 1.5s infinite linear;
   position: absolute;
 }
-.loader:before,
-.loader:after {
+.cpu-playing-loader:before,
+.cpu-playing-loader:after {
   content: "";
   position: absolute;
   inset: 0;
@@ -212,7 +212,7 @@ button:focus {
   animation: inherit;
   animation-delay: -0.5s;
 }
-.loader:after {
+.cpu-playing-loader:after {
   animation-delay: -1s;
 }
 @keyframes l2 {
@@ -222,7 +222,7 @@ button:focus {
 }
 
 /* HTML: <div class="loader"></div> */
-.loader2 {
+.homescreen-loader {
   width: 120px;
   height: 20px;
   background: linear-gradient(#000 0 0) left/20px 20px no-repeat #ddd;
@@ -235,14 +235,14 @@ button:focus {
 }
 
 /* HTML: <div class="loader"></div> */
-.loader3 {
+.switch-player-loader {
   margin-top: 80%;
   width: fit-content;
   font-weight: bold;
   font-size: 35px;
   overflow: hidden;
 }
-.loader3::before {
+.switch-player-loader::before {
   content: "Switching Player";
   color: #0000;
   text-shadow: 0 0 0 #2b2d42,19ch 0 0 #b1a7a6,38ch 0 0 #2b2d42;
@@ -255,14 +255,14 @@ button:focus {
   100%{background-position: right ;text-shadow: -38ch 0 0 #2b2d42,-19ch 0 0 #b1a7a6,   0 0 0 #2b2d42}
 }
 
-.loader4 {
+.restart-game-loader {
   margin-top: 80%;
   width: fit-content;
   font-weight: bold;
   font-size: 35px;
   overflow: hidden;
 }
-.loader4::before {
+.restart-game-loader::before {
   content: "Restarting Game";
   color: #0000;
   text-shadow: 0 0 0 #2b2d42,16ch 0 0 #b1a7a6,32ch 0 0 #2b2d42;

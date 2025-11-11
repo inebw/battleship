@@ -9,13 +9,14 @@ export default function createBoard(player, cpuMode = false) {
   playerName.classList.add("player-name");
   if (player.name === "Player 1" || player.name === "Player 2")
     playerName.textContent = `Attack ${player.name} board`;
-  else playerName.textContent = player.isCPU ? `Attack Computer board` : "Your Board";
+  else
+    playerName.textContent = player.isCPU
+      ? `Attack Computer board`
+      : "Your Board";
 
   board.appendChild(playerName);
 
-  if (player.name === "Player 1" || player.name === "Player 2")
-    board.classList.add(`board-p${player.name.slice(player.name.length - 1)}`);
-  else board.classList.add(`${player.isCPU ? "cpu" : "real-player"}`);
+  board.classList.add(`board-${player.id}`);
 
   for (let i = 0; i < 10; i += 1) {
     const row = document.createElement("div");

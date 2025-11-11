@@ -13,7 +13,8 @@ export default function attack(x, y, player) {
     }
   }
   // For Human Players: Reveals the ship's color if ship is found
-  // For CPU: If cpu hits a ship it add opacity
+  // For CPU: If cpu hits a ship it adds opacity
+  // For Both: Updates their ship graphs status
   function gotAttacked() {
     const currCell = document.getElementById(`${x}-${y}-${player.id}`);
     if (player.myBoard.board[x][y]) {

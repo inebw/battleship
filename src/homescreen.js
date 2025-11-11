@@ -1,5 +1,6 @@
-import startGame from "./stargGame";
+import vsComputer from "./vsComputer";
 import vsHuman from "./vsHuman";
+import { addLoader } from "./cssLoaders";
 
 export default function homescreen() {
   const mainContainer = document.querySelector(".container");
@@ -19,12 +20,7 @@ export default function homescreen() {
 
   mainContainer.appendChild(container);
 
-  function addLoader(container) {
-    container.innerHTML = "";
-    const loader = document.createElement("div");
-    loader.classList.add("loader2");
-    container.appendChild(loader);
-  }
+
 
   function showChoices() {
     homeContainer.innerHTML = "";
@@ -33,8 +29,8 @@ export default function homescreen() {
     vsComputerButton.classList.add("vs-computer");
     homeContainer.appendChild(vsComputerButton);
     vsComputerButton.addEventListener("click", () => {
-      addLoader(homeContainer);
-      setTimeout(startGame, 1000);
+      addLoader(homeContainer, "homescreen-loader", true);
+      setTimeout(vsComputer, 1000);
     });
 
     const vsHumanButton = document.createElement("button");
@@ -42,19 +38,19 @@ export default function homescreen() {
     vsHumanButton.classList.add("vs-human");
     homeContainer.appendChild(vsHumanButton);
     vsHumanButton.addEventListener("click", () => {
-      addLoader(homeContainer);
+      addLoader(homeContainer, "homescreen-loader", true);
       setTimeout(vsHuman, 1000);
     });
   }
 
-  const logo = document.querySelector('body>h1')
-  logo.addEventListener('click', () => {
-      resetContainer.innerHTML = "";
-  info.innerHTML = "";
-  graphs.innerHTML = "";
-    addLoader(mainContainer)
-    setTimeout(homescreen, 1000)
-  })
+  const logo = document.querySelector("body>h1");
+  logo.addEventListener("click", () => {
+    resetContainer.innerHTML = "";
+    info.innerHTML = "";
+    graphs.innerHTML = "";
+    addLoader(mainContainer, "homescreen-loader", true);
+    setTimeout(homescreen, 1000);
+  });
 
   const welcomeMessage = document.createElement("h2");
   welcomeMessage.textContent = "Welcome to Battleship!";
@@ -68,7 +64,7 @@ export default function homescreen() {
   container.appendChild(homeContainer);
 
   startButton.addEventListener("click", () => {
-    addLoader(homeContainer);
+    addLoader(homeContainer, "homescreen-loader", true);
     setTimeout(showChoices, 500);
   });
 }
