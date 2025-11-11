@@ -1,6 +1,7 @@
 import Player from "./player";
 import createBoard from "./createBoard";
 import createGraph from "./createGraph";
+import attack from "./attack";
 
 export default function vsHuman() {
   const container = document.querySelector(".container");
@@ -43,9 +44,16 @@ export default function vsHuman() {
     const uniqueid = this.id;
     const row = parseInt(uniqueid.slice(0, 1), 10);
     const col = parseInt(uniqueid.slice(2, 3), 10);
-    const opponent = uniqueid.slice(4) === "p1" ? player1 : player2;
-    const player = uniqueid.slice(4) === "p1" ? player2 : player1;
+    const opponent = uniqueid.slice(4) === "P1" ? player1 : player2;
+    const player = uniqueid.slice(4) === "P1" ? player2 : player1;
+    console.log(row, col, opponent, player);
     const attackval = attack(row, col, opponent);
+    if (attackval === 1) {
+      if (opponent.myBoard.areShipsDestroyed()) {
+        gameWon(player);
+        return 0;
+      }
+    }
     if (attackval === 2) switchButtonAdder(opponent, player);
   }
 
@@ -73,7 +81,7 @@ export default function vsHuman() {
     const opponentGraph = document.querySelector(`.graph${opponentNumber}`);
     opponentContainer.classList.add("hidden");
     opponentGraph.classList.add("hidden");
-    addLoader(container, 'loader3');
+    addLoader(container, "loader3");
     setTimeout(() => {
       removeLoader();
       info.textContent = `It's your turn: ${opponent.name}`;
@@ -87,18 +95,14 @@ export default function vsHuman() {
   }
 
   function turnOffPlayerBoardEVentListner(player) {
-    const allCells = document.querySelectorAll(
-      `.p${player.name.slice(player.name.length - 1)}`,
-    );
+    const allCells = document.querySelectorAll(`.${player.id}`);
     allCells.forEach((element) => {
       element.removeEventListener("click", play);
     });
   }
 
   function turnOnPlayerBoardEventListner(player) {
-    const allCells = document.querySelectorAll(
-      `.p${player.name.slice(player.name.length - 1)}`,
-    );
+    const allCells = document.querySelectorAll(`.${player.id}`);
     allCells.forEach((element) => {
       element.addEventListener("click", play);
     });
@@ -118,55 +122,17 @@ export default function vsHuman() {
     resetButton.classList.add("reset");
     resetButton.textContent = "Replay";
     turnOffPlayerBoardEVentListner(player2);
-    turnOffPlayerBoardEVentListner(player1)
+    turnOffPlayerBoardEVentListner(player1);
     resetButton.addEventListener("click", () => {
       container.innerHTML = "";
       info.innerHTML = "";
       graphs.innerHTML = "";
       resetContainer.innerHTML = "";
-      addLoader(container, 'loader4');
+      addLoader(container, "loader4");
       setTimeout(() => {
         vsHuman();
       }, 1000);
     });
-  }
-
-  function attack(x, y, player) {
-    let cellValue = player.myBoard.board[x][y];
-    if (cellValue === "!" || cellValue === 1) return 0;
-    if (cellValue !== 0) {
-      const currCell = document.getElementById(
-        `${x}-${y}-p${player.name.slice(player.name.length - 1)}`,
-      );
-      if (player.myBoard.board[x][y])
-        currCell.classList.add(`ship${player.myBoard.board[x][y].length}`);
-    }
-
-    player.myBoard.receiveAttack(x, y);
-    cellValue = player.myBoard.board[x][y];
-
-    for (let i = 0; i < 10; i += 1) {
-      for (let j = 0; j < 10; j += 1) {
-        const currId = `${i}-${j}-p${player.name.slice(player.name.length - 1)}`;
-        if (player.myBoard.board[i][j] === "!") {
-          const cell = document.getElementById(currId);
-          cell.style.backgroundColor = "#e5e5e5";
-        }
-      }
-    }
-
-    if (cellValue === 1) {
-      const graphCell = document.getElementById(
-        `${x}-${y}-graph-p${player.name.slice(player.name.length - 1)}`,
-      );
-      graphCell.style.opacity = 0.2;
-      if (player.myBoard.areShipsDestroyed()) {
-        gameWon(player.name === "Player 1" ? player2 : player1);
-        return 0;
-      }
-      return 1;
-    }
-    return 2;
   }
 
   function initialize() {

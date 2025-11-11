@@ -5,6 +5,7 @@ export default class ComputerPlayer extends Player {
   constructor() {
     super();
     this.name = 'Computer'
+    this.id = 'cpu'
     this.isCPU = true;
     this.allMoves = new Set();
     this.visited = [];

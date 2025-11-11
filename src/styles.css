@@ -79,6 +79,11 @@ button:focus {
   cursor: crosshair;
 }
 
+ .attack-cell {
+  animation: attackCell 0.6s;
+  animation-delay: 200ms;
+ }
+
 .player-name {
   display: flex;
   justify-self: center;
@@ -268,4 +273,35 @@ button:focus {
 @keyframes l23{
   50% {background-position: center;text-shadow: -16ch 0 0 #2b2d42,    0 0 0 #b1a7a6,16ch 0 0 #2b2d42}
   100%{background-position: right ;text-shadow: -32ch 0 0 #2b2d42,-16ch 0 0 #b1a7a6,   0 0 0 #2b2d42}
+}
+
+@keyframes attackCell {
+  from {
+  transform: rotate3d(1, 1, 1, 180deg);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  to {
+    transform: scale(1)
+  }
+}
+
+@keyframes attackCellCPU {
+  from {
+  transform: rotate3d(1, 1, 1, 180deg);
+  opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 1;
+  }
+  90% {
+    transform: scale(1.5);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1);
+    opacity: 0.5;
+  }
 }

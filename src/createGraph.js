@@ -21,10 +21,7 @@ export default function createGraph(player) {
     for (let j = 0; j < allShips[i].cords.length; j += 1) {
       const graphCell = document.createElement("div");
       graphCell.classList.add("graph-cell", `ship${allShips[i].length}`);
-      if (player.name === "Player 1" || player.name === "Player 2")
-        graphCell.id = `${allShips[i].cords[j][0]}-${allShips[i].cords[j][1]}-graph-p${player.name.slice(player.name.length - 1)}`;
-      else
-        graphCell.id = `${allShips[i].cords[j][0]}-${allShips[i].cords[j][1]}-graph-${player.isCPU ? "cpu" : "real"}`;
+      graphCell.id = `${allShips[i].cords[j][0]}-${allShips[i].cords[j][1]}-graph-${player.id}`;
       graph.appendChild(graphCell);
     }
     container.appendChild(graph);
